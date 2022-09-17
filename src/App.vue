@@ -1,7 +1,14 @@
 <template>
   <div class="App">
-    <vueQuiz :question="question"></vueQuiz>
-    <vueResult></vueResult>
+    <vueQuiz
+        v-if="step !== questions.length"
+        :question="question"
+        :percentage="percentage"
+        @nextStep="nextStep"></vueQuiz>
+    <vueResult
+        v-if="step === questions.length"
+        :questions="questions"
+        :correct="correct"></vueResult>
   </div>
 </template>
 
@@ -18,7 +25,7 @@ export default {
   data() {
     return {
       step: 0,
-      questions:[
+      questions: [
         {
           title: 'React - это ... ?',
           variants: ['библиотека', 'фреймворк', 'приложение'],
@@ -39,7 +46,24 @@ export default {
           correct: 2,
         },
       ],
-      question: this.questions[this.step]
+      correct: 0
+    }
+  },
+  methods: {
+    nextStep(i, correct) {
+      this.step++;
+      if (i === correct) {
+        this.correct++
+      }
+      console.log(this.correct);
+    }
+  },
+  computed: {
+    question() {
+      return this.questions[this.step]
+    },
+    percentage() {
+      return Math.round(this.step / this.questions.length * 100);
     }
   }
 }

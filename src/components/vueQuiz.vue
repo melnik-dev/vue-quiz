@@ -1,19 +1,38 @@
 <template>
   <div class="progress">
-    <div :style="{'width': '30%'}"  class="progress__inner"></div>
+    <div :style="{'width': percentage + '%'}"  class="progress__inner"></div>
   </div>
-  <h1>{{ question }}</h1>
+  <h1>{{ question.title }}</h1>
   <ul>
-    <li>Это функция для хранения данных компонента</li>
-    <li>Это глобальный стейт</li>
-    <li>Это когда на ты никому не нужен</li>
+    <li
+        v-for="(variant, i) in question.variants"
+        :key="i"
+        @click="onClickVariant(i, question.correct)">{{variant}}</li>
   </ul>
 </template>
 
 <script>
 export default {
   name: "vueQuiz",
-  props: ["question"]
+  props: {
+    question: {
+      type: Object,
+      require: false
+},
+    percentage:{
+      type: Number,
+      require: false
+    }
+  },
+  emits: {
+    "nextStep": value => typeof value === "number"
+  },
+  methods: {
+    onClickVariant(i, correct) {
+      console.log(i, correct);
+      this.$emit('nextStep', i, correct);
+    }
+  }
 }
 </script>
 
